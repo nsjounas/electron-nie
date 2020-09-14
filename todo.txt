@@ -1,0 +1,9 @@
+- Open a window with a new entry when there has been a success.
+- Create error handling and messages for communications failure with the page itself.
+- Create a builder config file to exclude files from executable. - https://github.com/electron-userland/electron-builder/issues/927
+- Fix config to get Program icons.
+- Create update channel for app.
+- Update logging and create bug report channel.
+- Make respawned windows position themselves in the same x position as the one that was closed.
+- On quit without close, reestablish the spreadsheets.
+- On reload count surpassed, open and close window to refresh session.

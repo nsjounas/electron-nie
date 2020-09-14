@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <title>Silb - The Stand In Line Bot</title>
+<style>
+    #loadingBanner{
+        display: block;
+        text-align: center;
+        color: white;
+        background: black;
+        font-size: 4em;
+    }
+
+    body{
+        height: 100%;
+        background-color: black;
+        background-image: url(../build/silb_background.jpg);
+        background-size: auto;
+        background-repeat: no-repeat;
+        background-position: center;
+        margin:0;
+    }
+
+    h1{
+        font-size: 6em;
+        text-align: center;
+        color: yellow;
+        background-color: rgba(255,255,255,0.75);
+
+        margin: 0;
+    }
+</style>
+</head>
+<body>
+
+<h1> Silb - The Stand In Line Bot</h1>
+<h2  id='loadingBanner'>Cargando datos, por favor espere</h2>
+<script>
+    require('electron').ipcRenderer.once('ping', () => {
+       document.body.removeChild(document.getElementById('loadingBanner'));
+    })
+</script>
+</body>
+</html>
