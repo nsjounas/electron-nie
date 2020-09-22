@@ -1,6 +1,6 @@
 {
   "name": "silb",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Stand In Line Bot",
   "main": "js/main.js",
   "dependencies": {
@@ -18,7 +18,8 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "sudo electron-forge make --platform=win32 --arch=x64"
+
   },
   "author": "Reuven Farchi",
   "license": "UNLICENSED",
@@ -59,7 +60,6 @@
     "appId": "com.my-website.my-app",
     "productName": "SILB- The Stand In Line Bot",
     "copyright": "Copyright © 2020 ${author}",
-
     "win": {
       "icon": "./build/icon.ico"
     },

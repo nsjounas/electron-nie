@@ -6,4 +6,11 @@
 - Update logging and create bug report channel.
 - Make respawned windows position themselves in the same x position as the one that was closed.
 - On quit without close, reestablish the spreadsheets.
-- On reload count surpassed, open and close window to refresh session.
+- Create build script so that devtools are automatically false on prod
+- Spin out DB to count successes
+- Look into captcha filler
+- Success limiter counter for bundles.
+- Implement cc charging subsystem for bundles.
+- Get Twillio numbers for SMS code filling.
+
+- Make sure ht windows don't share the session

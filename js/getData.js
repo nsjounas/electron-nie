@@ -1,5 +1,6 @@
 const {google} = require('googleapis');
 let privateKey = require("../build/privateKey.json");
+const spreadsheetId= '1T9s3VG9UvlQC0uF25V5aCr-6IvnQQDkWFKvFb3gibeI'
 
 function init() {
     return new Promise((resolve, reject) => {
@@ -27,7 +28,7 @@ function populateDataMap(auth) {
         let returnData = {records: [], interval: 30};
         const sheets = google.sheets({version: 'v4', auth});
         sheets.spreadsheets.values.batchGet({
-            spreadsheetId: '1gjzYXCQkmk1JhbS2NHkqUDxsxC5mpIL-XweZmTcKrxI',
+            spreadsheetId: spreadsheetId,
             ranges: ['expedientes!A2:M99', 'data!F2'],
         }, (err, res) => {
             if (err) {
@@ -81,7 +82,7 @@ for(let rangeIndex =0; rangeIndex < ranges.length; rangeIndex++){
 }
     let resources = {
         auth: auth,
-        spreadsheetId: '1gjzYXCQkmk1JhbS2NHkqUDxsxC5mpIL-XweZmTcKrxI',
+        spreadsheetId: spreadsheetId,
         resource:{
             valueInputOption: 'RAW',
             data:resourceData

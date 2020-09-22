@@ -9,12 +9,9 @@ let screenWidth;
 let screenHeight;
 //Main window
 let authWin;
-//Operative Windows
-let fillerWindows = [];
 
 
 app.on('window-all-closed', function () {
-    //TODO=> Reset all in progress fields to unstarted in spreadsheet
     let fixIndeces = [];
     let fixValues = []
     getData.populateDataMap(auth).then((ssData) => {
@@ -104,13 +101,21 @@ function makeOpWindows(records, interval, xPosition = null) {
 
         let windowWidth = Math.ceil((screenWidth / 3));
         let windowHeight = screenHeight - 200;
+
+
         for (let index = 0; index < records.length; index++) {
-            ranges.push('M' + records[index].dataRow);
-            values.push('En Progreso')
             let xOffset = xPosition ? xPosition : (windowWidth * index)
             let yOffset = 200;
             //Create op wins
-            const win = new BrowserWindow({
+            let windowNumber = parseInt(xOffset / windowWidth);
+            let ses = session.fromPartition(windowNumber.toString(), {cache: false})
+            ranges.push('M' + records[windowNumber].dataRow);
+            values.push('En Progreso');
+
+            let win = new BrowserWindow({
+                webPreferences: {
+                    session: ses
+                },
                 width: windowWidth,
                 height: windowHeight,
                 x: xOffset,
@@ -118,17 +123,19 @@ function makeOpWindows(records, interval, xPosition = null) {
                 parent: authWin,
                 show: false,
                 frame: true,
-                devTools: true,
-                session: session.fromPartition(`${index}`)
+                devTools: true
 
             });
             win.webContents.openDevTools()
 
-            fillTurnForms(win, records[index], interval);
-            fillerWindows.push(win);
-            console.log('Window ' + index + ' created');
+            fillTurnForms(win, records[windowNumber], interval);
+            console.log('Window ' + windowNumber + ' created');
+
             win.loadURL('https://sede.administracionespublicas.gob.es/pagina/index/directorio/icpplus').then(() => {
-                console.log('Window ' + index + ' loaded');
+                console.log('Window ' + windowNumber + ' loaded');
+                ses.cookies.get({url: 'sede.administracionespublicas.gob.es'}).then((value) => {
+                    console.log(value)
+                })
             }).catch((e) => {
                 console.error(e);
             });
@@ -137,8 +144,7 @@ function makeOpWindows(records, interval, xPosition = null) {
                 let lastPage = history[history.length - 1]
 
                 if (lastPage.indexOf('#success') > -1) {
-                    getData.updateCells(auth, ['M' + records[index].dataRow], ['Finalizado']).then(() => {
-                        // TODO => Load new window with new row
+                    getData.updateCells(auth, ['M' + records[windowNumber].dataRow], ['Finalizado']).then(() => {
                         console.log('Success!');
                     }).catch((e) => {
                         console.error(e)
@@ -147,8 +153,8 @@ function makeOpWindows(records, interval, xPosition = null) {
                 } else {
                     // Respawn window
 
-                    makeOpWindows([records[index]], interval, e.sender.browserWindowOptions.x).then(() => {
-                        fillTurnForms(win, records[index], interval);
+                    makeOpWindows([records[windowNumber]], interval, e.sender.browserWindowOptions.x).then(() => {
+                        fillTurnForms(win, records[windowNumber], interval);
                     })
 
                 }
@@ -157,7 +163,7 @@ function makeOpWindows(records, interval, xPosition = null) {
             win.once('ready-to-show', () => {
                 win.show();
                 authWin.webContents.send('ping', 'window loaded');
-                console.log('Window ' + index + ' ready to show.')
+                console.log('Window ' + windowNumber + ' ready to show.')
 
             })
             if (index === records.length - 1) {
@@ -237,7 +243,8 @@ function fillTurnForms(win, record, interval) {
                 var docTypeArray = Array.from(docType);
 
                 docTypeArray.find(function (element) {
-                    if (element.value.replace(/\./g, '').toUpperCase() === '${record.tipoDocumento}') {
+                    if (element.value.replace(/\\./g, '').toUpperCase() === '${record.tipoDocumento}') {
+                        element.click();
                         element.checked = true;
                     }
                 })
@@ -268,10 +275,16 @@ function fillTurnForms(win, record, interval) {
            };0`
         ,
 //Stage 5
-        `
-                debugger;
-                enviar('solicitud');0;
-                `,
+
+        `var submitBtn = document.getElementById('btnSubmit');
+    if (submitBtn) {
+        window.close();
+    } else {
+        enviar('solicitud');
+        0;
+    }`
+
+        ,
 //Stage 6
 
         `var officeSelect = document.getElementById('idSede');
@@ -305,7 +318,7 @@ function fillTurnForms(win, record, interval) {
 
 //Stage 7
 
-   `var phoneField = document.getElementById('txtTelefonoCitado');
+        `var phoneField = document.getElementById('txtTelefonoCitado');
     var email1 = document.getElementById('emailUNO');
     var email2 = document.getElementById('emailDOS');
     var appointmentReason = document.getElementById('txtObservaciones');
@@ -391,7 +404,7 @@ function fillTurnForms(win, record, interval) {
         window.close();
         };0
         `
-]
+    ]
 
     let reloadCounter = 0;
 
@@ -402,6 +415,9 @@ function fillTurnForms(win, record, interval) {
         let currentPage = history[stage];
         let lastPage = history[stage - 1];
         if (lastPage) {
+            if (lastPage.indexOf('#stop') > -1) {
+                return false;
+            }
             if (lastPage.indexOf('#reset') > -1) {
                 stage = parseInt(lastPage.substr(lastPage.indexOf('#reset') + 6, 1));
                 e.sender.history.length = stage + 1;
