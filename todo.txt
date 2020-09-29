@@ -12,5 +12,3 @@
 - Success limiter counter for bundles.
 - Implement cc charging subsystem for bundles.
 - Get Twillio numbers for SMS code filling.
-
-- Make sure ht windows don't share the session

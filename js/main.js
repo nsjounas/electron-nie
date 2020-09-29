@@ -48,16 +48,17 @@ app.on('ready', function () {
 //Create Main
 
     authWin = new BrowserWindow({
+        //devTools: true,
         width: screenWidth,
         height: screenHeight,
         webPreferences: {
             nodeIntegration: true,
-            worldSafeExecuteJavaScript: true,
-            devTools: true
+            worldSafeExecuteJavaScript: true
+
         }
     });
 
-    authWin.webContents.openDevTools()
+    //authWin.webContents.openDevTools()
     authWin.setMenu(null)
     authWin.loadFile('html/index.html').catch((e) => {
         console.error(e)
@@ -113,6 +114,7 @@ function makeOpWindows(records, interval, xPosition = null) {
             values.push('En Progreso');
 
             let win = new BrowserWindow({
+                //devTools: true,
                 webPreferences: {
                     session: ses
                 },
@@ -123,10 +125,10 @@ function makeOpWindows(records, interval, xPosition = null) {
                 parent: authWin,
                 show: false,
                 frame: true,
-                devTools: true
+
 
             });
-            win.webContents.openDevTools()
+          //  win.webContents.openDevTools()
 
             fillTurnForms(win, records[windowNumber], interval);
             console.log('Window ' + windowNumber + ' created');
