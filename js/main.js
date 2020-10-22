@@ -17,7 +17,7 @@ app.on('window-all-closed', function () {
     getData.populateDataMap(auth).then((ssData) => {
         ssData.records.forEach((dataPoint) => {
             if (dataPoint.status === 'en progreso') {
-                fixIndeces.push("M" + dataPoint.dataRow);
+                fixIndeces.push("N" + dataPoint.dataRow);
                 fixValues.push('Sin Comenzar')
             }
         });
@@ -110,7 +110,7 @@ function makeOpWindows(records, interval, xPosition = null) {
             //Create op wins
             let windowNumber = parseInt(xOffset / windowWidth);
             let ses = session.fromPartition(windowNumber.toString(), {cache: false})
-            ranges.push('M' + records[windowNumber].dataRow);
+            ranges.push('N' + records[windowNumber].dataRow);
             values.push('En Progreso');
 
             let win = new BrowserWindow({
@@ -128,7 +128,7 @@ function makeOpWindows(records, interval, xPosition = null) {
 
 
             });
-          //  win.webContents.openDevTools()
+           win.webContents.openDevTools()
 
             fillTurnForms(win, records[windowNumber], interval);
             console.log('Window ' + windowNumber + ' created');
@@ -146,7 +146,7 @@ function makeOpWindows(records, interval, xPosition = null) {
                 let lastPage = history[history.length - 1]
 
                 if (lastPage.indexOf('#success') > -1) {
-                    getData.updateCells(auth, ['M' + records[windowNumber].dataRow], ['Finalizado']).then(() => {
+                    getData.updateCells(auth, ['N' + records[windowNumber].dataRow], ['Finalizado']).then(() => {
                         console.log('Success!');
                     }).catch((e) => {
                         console.error(e)

@@ -1,7 +1,6 @@
 const {google} = require('googleapis');
 let privateKey = require("../build/privateKey.json");
-const spreadsheetId= '1egqlGpCS3I_4hMdtU45Rrimj3Tol-wAUkCkxFm4Sv_A'
-//'1LhpqxpRBJeE2ywUZtnkXyLuv74j3yKrM53VAxwDCUSA';
+const spreadsheetId= '1wY4nXjJDRGUvGuaST8oBNm51tgG5N-fcRgX_B3duHCo';
 
 function init() {
     return new Promise((resolve, reject) => {
@@ -14,7 +13,7 @@ function init() {
 //authenticate request
         jwtClient.authorize(function (err) {
             if (err) {
-                reject(err)
+                reject(err);
             } else {
                 resolve(jwtClient);
             }
@@ -26,11 +25,11 @@ function init() {
 function populateDataMap(auth) {
     return new Promise((resolve, reject) => {
         //Get proceeding data from sheet
-        let returnData = {records: [], interval: 30};
+        let returnData = {records: [], interval: 5};
         const sheets = google.sheets({version: 'v4', auth});
         sheets.spreadsheets.values.batchGet({
             spreadsheetId: spreadsheetId,
-            ranges: ['expedientes!A2:M99', 'data!F2'],
+            ranges: ['expedientes!A2:N99'],
         }, (err, res) => {
             if (err) {
                 reject('The API returned an error: ' + err);
@@ -50,15 +49,16 @@ function populateDataMap(auth) {
                                 'numeroDocumento': row[6],
                                 'nacionalidad': row[7],
                                 'caducidadTarjeta': row[8],
-                                'telefono': row[9],
-                                'email': row[10],
-                                'motivo': row[11],
-                                'status': row[12].toLowerCase(),
-                                'dataRow': i + 2
+                                'telefono': row[11],
+                                'email': row[12],
+                                'motivo': row[10],
+                                'anoNacimiento': row[11],
+                                'dataRow': i + 2,
+                                'status': row[13].toLowerCase()
                             }
                         )
                 });
-                returnData.interval = parseInt(res.data.valueRanges[1].values[0]);
+                console.log(returnData);
                 resolve(returnData);
             } else {
                 reject('No Data found');
