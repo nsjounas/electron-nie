@@ -1,0 +1,77 @@
+{
+  "name": "silb",
+  "version": "1.0.3",
+  "description": "Stand In Line Bot",
+  "main": "js/main.js",
+  "dependencies": {
+    "electron-compile": "^6.4.4",
+    "electron-squirrel-startup": "^1.0.0",
+    "googleapis": "^39.2.0"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "electron-forge": "^5.2.4",
+    "electron-prebuilt-compile": "8.2.0"
+  },
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "sudo electron-forge make --platform=win32 --arch=x64"
+
+  },
+  "author": "Reuven Farchi",
+  "license": "UNLICENSED",
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "squirrel"
+        ],
+        "darwin": [
+          "zip"
+        ],
+        "linux": [
+          "deb",
+          "rpm"
+        ]
+      },
+      "electronPackagerConfig": {
+        "packageManager": "npm"
+      },
+      "electronWinstallerConfig": {
+        "name": "silb",
+        "iconUrl": "https://drive.google.com/file/d/1OZe0u10ChNOZb64OEKNJ3gdW7vx62P-P/view?usp=sharing"
+      },
+      "electronInstallerDebian": {},
+      "electronInstallerRedhat": {},
+      "github_repository": {
+        "owner": "",
+        "name": ""
+      },
+      "windowsStoreConfig": {
+        "packageName": "",
+        "name": "silb"
+      }
+    }
+  },
+  "build": {
+    "appId": "com.my-website.my-app",
+    "productName": "SILB- The Stand In Line Bot",
+    "copyright": "Copyright © 2020 ${author}",
+    "win": {
+      "icon": "./build/icon.ico"
+    },
+    "files": [
+      "./build/**/*",
+      "./html/**/*",
+      "./node_modules/**/*",
+      "./build/**/*",
+      "./js/**/*"
+    ],
+    "directories": {
+      "buildResources": "build"
+    }
+  }
+}
