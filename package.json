@@ -4,6 +4,7 @@
   "description": "Stand In Line Bot",
   "main": "js/main.js",
   "dependencies": {
+    "axios": "^0.20.0",
     "electron-compile": "^6.4.4",
     "electron-squirrel-startup": "^1.0.0",
     "googleapis": "^39.2.0"
@@ -19,7 +20,6 @@
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "sudo electron-forge make --platform=win32 --arch=x64"
-
   },
   "author": "Reuven Farchi",
   "license": "UNLICENSED",
